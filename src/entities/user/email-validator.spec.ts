@@ -1,0 +1,57 @@
+import Email from './email';
+
+describe('Email validator', () => {
+  test('Should accept valid email (valid classes)', () => {
+    expect(Email.validate('otaviolemos@gmail.com')).toBe(true);
+  });
+
+  test('Should not accept with invalid email (undefined)', () => {
+    expect(Email.validate('')).toBe(false);
+  });
+
+  test('Should not accept with invalid email (only blank spaces)', () => {
+    expect(Email.validate('  ')).toBe(false);
+  });
+
+  test('Should not accept email without the at-sign (2)', () => {
+    expect(Email.validate('otaviolemosgmail.com')).toBe(false);
+  });
+
+  test('Should not accept more than 64 chars on local part (4)', () => {
+    const localPart = 'c'.repeat(65);
+    const email = `${localPart}@gmail.com`;
+    expect(Email.validate(email)).toBe(false);
+  });
+
+  test('Should not accept more than 63 chars on domains parts', () => {
+    const domainPart = 'c'.repeat(64);
+    const email = `any_email@gmail.${domainPart}`;
+    expect(Email.validate(email)).toBe(false);
+  });
+
+  test('Should not accept empty local part (5)', () => {
+    expect(Email.validate('@gmail.com')).toBe(false);
+  });
+
+  test('Should not accept invalid char - local part (7)', () => {
+    expect(Email.validate('ot violemos@gmail.com')).toBe(false);
+  });
+
+  test('Should not accept a dot as first char - local part (9)', () => {
+    expect(Email.validate('.otaviolemos@gmail.com')).toBe(false);
+  });
+
+  test('Should not accept a dot as last char - local part (11)', () => {
+    expect(Email.validate('otaviolemos.@gmail.com')).toBe(false);
+  });
+
+  test('Should not accept more than 255 chars on domain part (4)', () => {
+    const domain = 'c'.repeat(260);
+    const email = `otaviolemos@${domain}.com`;
+    expect(Email.validate(email)).toBe(false);
+  });
+
+  test('Should not accept dot as first char - domain part', () => {
+    expect(Email.validate('otaviolemos@.gmail.com')).toBe(false);
+  });
+});
